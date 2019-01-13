@@ -8,6 +8,7 @@
  ***************************************************/
 
 #include "ProgressBar.hpp"
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -74,13 +75,25 @@ bool ProgressBar::InitProgressBar
     {
     case PROGRESS_BAR_FILE:
         {
-            // TODO: to update the progress bar in the file.
+            // to update the progress bar in the file.
+            mOutFile.seekp( std::ios::beg );
+
+            std::string progressBarStr;
+            bool ret = GenerateProgressBar( mProgressVal, progressBarStr );
+            mOutFile << progressBarStr;
+            mOutFile.flush();
+
+            if( ret )
+            {
+                return true;
+            }
         }
         break;
 
     case PROGRESS_BAR_CONSOLE:
         {
             // to update the progress bar in the std::cout
+            // here we can also use '\r', in linux, it means to return to the begin of the line.
             // Backspace
             for( int i=0; i<PROGRESS_BUF_LEN; ++i )
             {
@@ -121,8 +134,30 @@ void ProgressBar::StartProgressThread
     const int aTime
     )
 {
-    // TODO: start a thread and the flush time
+    // start a thread and the flush time
     // of the progress bar is the aTime.
+    auto thread_process = [&, aTime] {
+        double lastVal{};
+        do
+        {
+            if( lastVal != mProgressVal )
+            {
+                this->UpdateProgressBar( mProgressVal );
+
+                lastVal = mProgressVal;
+            }
+
+            if( mProgressVal == mProgressTotalVal )
+            {
+                break;
+            }
+
+            // sleep
+            std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+        } while( true );
+    };
+
+    mUIThread = std::thread( thread_process );
 }
 
 bool ProgressBar::GenerateProgressBar
