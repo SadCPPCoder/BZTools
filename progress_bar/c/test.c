@@ -11,6 +11,7 @@ int main( int argc, char **argv )
     printf("The progress of task: \n");
     while( i <= 100 )
     {
+        // In linux '/r' is to return the begin of the line.
         printf("[%-100s][%d%%][%c]\r", bar, i, lable[i%4]);
         fflush(stdout);
         bar[i] = '#';
