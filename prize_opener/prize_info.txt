@@ -1,0 +1,6 @@
+# Bob provide
+<Reg Bag Of Cash $1000>*3
+# Boss provide
+<Jing Dong Card, $5000>*2
+# Prize First
+<Huawei Mate20>*1

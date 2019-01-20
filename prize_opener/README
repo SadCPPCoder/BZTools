@@ -1,0 +1,4 @@
+The PrizeOpener is a tool to open a prize.
+1. Add candidate information into candidate_info.txt;
+2. Add prize information into prize_info.txt;
+3. Run ./prize_opener_main to open the prize in all the candidate radomly.
